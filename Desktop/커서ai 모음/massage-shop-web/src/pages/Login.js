@@ -9,6 +9,8 @@ import {
   Alert,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useAuth } from '../contexts/AuthContext';
 
 function Login() {
   const [credentials, setCredentials] = useState({
@@ -17,6 +19,7 @@ function Login() {
   });
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -31,18 +34,12 @@ function Login() {
     setError('');
 
     try {
-      // TODO: Implement actual authentication
-      // For now, using mock authentication
-      if (credentials.username === 'admin' && credentials.password === 'admin123') {
-        // Store authentication token
-        localStorage.setItem('authToken', 'mock-token');
-        localStorage.setItem('userRole', 'admin');
-        navigate('/');
-      } else {
-        setError('잘못된 사용자 이름 또는 비밀번호입니다.');
-      }
+      const response = await axios.post('http://localhost:5000/api/login', credentials);
+      const { token, role } = response.data;
+      login(token, role);
+      window.location.replace('/home');
     } catch (err) {
-      setError('로그인 중 오류가 발생했습니다.');
+      setError('잘못된 사용자 이름 또는 비밀번호입니다.');
     }
   };
 
