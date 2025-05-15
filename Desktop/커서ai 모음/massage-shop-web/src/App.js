@@ -2,13 +2,13 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { AuthProvider } from './contexts/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
-import Navbar from './components/Navbar';
-import Login from './pages/Login';
-import CustomerManagement from './pages/CustomerManagement';
-import ReservationManagement from './pages/ReservationManagement';
-import TherapistManagement from './pages/TherapistManagement';
+import { AuthProvider } from 'src/contexts/AuthContext';
+import ProtectedRoute from 'src/components/ProtectedRoute';
+import Navbar from 'src/components/Navbar';
+import Login from 'src/pages/Login';
+import CustomerManagement from 'src/pages/CustomerManagement';
+import ReservationManagement from 'src/pages/ReservationManagement';
+import TherapistManagement from 'src/pages/TherapistManagement';
 
 // Create theme
 const theme = createTheme({
@@ -23,16 +23,16 @@ const theme = createTheme({
   },
 });
 
-function App() {
+const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AuthProvider>
-        <Router>
+      <Router>
+        <AuthProvider>
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route
-              path="/"
+              path="/home"
               element={
                 <ProtectedRoute>
                   <Navbar />
@@ -58,12 +58,13 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
-        </Router>
-      </AuthProvider>
+        </AuthProvider>
+      </Router>
     </ThemeProvider>
   );
-}
+};
 
 export default App; 
